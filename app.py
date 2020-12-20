@@ -1,51 +1,69 @@
-import numpy as np
+# importing libraries
 from flask import Flask, render_template, request, redirect
 import requests
 import pandas as pd
-from datetime import datetime
-from bokeh.plotting import figure, output_file, show
-from bokeh.embed import components 
+from bokeh.plotting import figure
+from bokeh.embed import components
+
+
+# function to get data
+def getData(ticker):
+    # requesting data from Quandl
+    start = "2017-01-01"
+    end = "2018-01-01"
+    reqUrl = 'https://www.quandl.com/api/v3/datasets/WIKI/' + ticker + '.json?start_date=' + start \
+              + '&end_date=' + end + '&api_key=txQkb6XK4ZB8sSX2ARRi'
+    r = requests.get(reqUrl)
+
+    # fetch data
+    return_data = r.json()['dataset']
+    df = pd.DataFrame(return_data['data'], columns=return_data['column_names'])
+    df.columns = [col.lower() for col in df.columns]
+    df = df.set_index(pd.DatetimeIndex(df['date']))
+    return df
+
+
+# function to get plot
+def getPlot(df, priceTypes, ticker):
+    p = figure(title="Quandl WIKI EOD Stock Prices - 2017", x_axis_type="datetime", x_axis_label="Date",
+               y_axis_label="Stock price", plot_width=1000)
+
+    mapping = {'open': 'open', 'adjOpen': 'adj. open', 'close': 'close', 'adjClose': 'adj. close'}
+    colour = {'open': 'orange', 'adjOpen': 'red', 'close': 'blue', 'adjClose': 'green'}
+
+    for priceType in priceTypes:
+        p.line(df.index, df[mapping[priceType]], color=colour[priceType], legend=ticker + ": " + mapping[priceType])
+    return p
+
 
 app = Flask(__name__)
+
 
 @app.route('/')
 def main():
     return redirect('/index')
 
-@app.route('/index')
+
+@app.route('/index', methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
 
-@app.route('/prices', methods=['POST'])
-def prices():
-    tsymbol1 = requests.form['tsymbol']
-    r = requests.get('https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker='+tsymbol1+'&qopts.columns=date,low,close,open,high&api_key=ky4zqe5WFwms5Tx2NXGx')
-    json_object = r.json()
-    datalist = json_object['datatable']['data']
-    #return render_template('prices.html')
-    #return redirect('/index')
-    df = pd.DataFrame(datalist)
-    datess = df[df.columns[0]].tolist()
-    closeprices = df[df.columns[2]].tolist()
 
-    # output to static HTML file
-    output_file("lines.html")
+@app.route('/graph', methods=['GET', 'POST'])
+def graph():
+    # User inputs from the index.html
+    ticker = request.form['ticker']
+    ticker = ticker.upper()
+    priceTypes = request.form.getlist('priceType')
 
-    # create a new plot with a title and axis labels
-    plot = figure(x_axis_label='Date', x_axis_type='datetime', y_axis_label='Price', toolbar_location="above",
-           toolbar_sticky=False)
-
-    def datetime(x):
-        return np.array(x, dtype=np.datetime64)
-
-    # add a line renderer with legend and line thickness
-    plot.line(datetime(datess), closeprices, legend="Closing Price", color = "#D3790A", line_width=2)
-
+    data = getData(ticker)
+    plot = getPlot(data, priceTypes, ticker)
 
     script, div = components(plot)
-    return render_template('graph.html', script=script, div=div, ticker = tsymbol1)
-    # show the results
+    reqUrl = "https://www.google.com/finance?q=" + ticker
+    return render_template('graph.html', script=script, div=div, reqUrl=reqUrl)
 
 
 if __name__ == '__main__':
+    #  app.run(host='0.0.0.0', port=33507)
     app.run(port=33507)
