@@ -18,7 +18,7 @@ def index():
 
 @app.route('/prices', methods=['POST'])
 def prices():
-    tsymbol1 = request.form['tsymbol']
+    tsymbol1 = requests.form['tsymbol']
     r = requests.get('https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?ticker='+tsymbol1+'&qopts.columns=date,low,close,open,high&api_key=ky4zqe5WFwms5Tx2NXGx')
     json_object = r.json()
     datalist = json_object['datatable']['data']
