@@ -9,10 +9,10 @@ from bokeh.embed import components
 # function to get data
 def getData(ticker):
     # requesting data from Quandl
-    start = "2018-01-01"
-    end = "2019-01-01"
+    start = "2020-11-01"
+    end = "2020-011-30"
     reqUrl = 'https://www.quandl.com/api/v3/datasets/WIKI/' + ticker + '.json?start_date=' + start \
-              + '&end_date=' + end + '&api_key=txQkb6XK4ZB8sSX2ARRi'
+              + '&end_date=' + end + '&api_key=ky4zqe5WFwms5Tx2NXGx'
     r = requests.get(reqUrl)
 
     # fetch data
@@ -25,7 +25,7 @@ def getData(ticker):
 
 # function to get plot
 def getPlot(df, priceTypes, ticker):
-    p = figure(title="Quandl WIKI EOD Stock Prices - 2017", x_axis_type="datetime", x_axis_label="Date",
+    p = figure(title="Quandl End of Day Stock prices 2020, Month of November", x_axis_type="datetime", x_axis_label="Date",
                y_axis_label="Stock price", plot_width=1000)
 
     mapping = {'open': 'open', 'adjOpen': 'adj. open', 'close': 'close', 'adjClose': 'adj. close'}
