@@ -10,7 +10,7 @@ from bokeh.embed import components
 def getData(ticker):
     # requesting data from Quandl
     start = "2020-11-01"
-    end = "2020-011-30"
+    end = "2020-11-30"
     reqUrl = 'https://www.quandl.com/api/v3/datasets/WIKI/' + ticker + '.json?start_date=' + start \
               + '&end_date=' + end + '&api_key=ky4zqe5WFwms5Tx2NXGx'
     r = requests.get(reqUrl)
