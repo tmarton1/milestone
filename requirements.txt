@@ -3,3 +3,7 @@ requests==2.20.0
 flask
 pandas
 bokeh
+dill
+jinja2
+pip
+simplejson
