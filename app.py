@@ -75,7 +75,7 @@ def about():
     plot = getPlot(data, ticker)
 
     script, div = components(plot)
-    return render_template('about.html', script=script, div=div, reqUrl=reqUrl)
+    return render_template('about.html', script=script, div=div)
 
 
 if __name__ == '__main__':
