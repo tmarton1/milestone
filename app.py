@@ -65,7 +65,7 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/about', methods=['GET', 'POST'])
+@app.route('/about', methods=['POST'])
 def about():
     # User inputs from the index.html
     ticker = request.form['ticker']
@@ -79,5 +79,4 @@ def about():
 
 
 if __name__ == '__main__':
-    #  app.run(host='0.0.0.0', port=33507)
     app.run(port=33507)
