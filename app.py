@@ -75,7 +75,7 @@ def graph():
 
     script, div = components(plot)
     reqUrl = "https://www.google.com/finance?q=" + ticker
-    return render_template('graph.html', script=script, div=div, reqUrl=reqUrl)
+    return render_template('about.html', script=script, div=div, reqUrl=reqUrl)
 
 
 if __name__ == '__main__':
