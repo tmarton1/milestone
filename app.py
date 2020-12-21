@@ -4,6 +4,7 @@ import requests
 import pandas as pd
 from bokeh.plotting import figure
 from bokeh.embed import components
+import datetime
 
 def get_date_string(first_date,delta_days):
     date_format='%Y-%m-%d'
