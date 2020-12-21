@@ -64,8 +64,8 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/graph', methods=['GET', 'POST'])
-def graph():
+@app.route('/about', methods=['GET', 'POST'])
+def about():
     # User inputs from the index.html
     ticker = request.form['ticker']
     ticker = ticker.upper()
@@ -74,7 +74,6 @@ def graph():
     plot = getPlot(data, ticker)
 
     script, div = components(plot)
-    reqUrl = "https://www.google.com/finance?q=" + ticker
     return render_template('about.html', script=script, div=div, reqUrl=reqUrl)
 
 
